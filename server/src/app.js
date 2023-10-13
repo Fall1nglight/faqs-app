@@ -1,6 +1,7 @@
 const express = require('express');
 const volleyball = require('volleyball');
 const helmet = require('helmet');
+const cors = require('cors');
 require('dotenv').config();
 
 // import routes, middlewares
@@ -13,6 +14,7 @@ const app = express();
 // middlewares
 app.use(volleyball);
 app.use(helmet());
+app.use(cors());
 app.use(express.json());
 
 // routes

@@ -1,19 +1,60 @@
-<script setup></script>
+<script setup>
+import { ref } from 'vue';
+import Joi from 'joi';
+import axios from 'axios';
+import schemas from '../schemas';
+
+// refs
+const faq = ref({
+  question: '',
+  answer: '',
+});
+
+// functions
+const handleSubmit = async () => {
+  try {
+    await schemas.upload.validateAsync(faq.value);
+
+    const uri = 'http://localhost:3000/api/faqs';
+
+    console.log({ ...faq.value });
+
+    const response = await axios.post(uri, faq.value);
+
+    console.log({ response });
+  } catch (error) {
+    console.error(error);
+  }
+};
+</script>
 
 <template>
   <section class="form p-5">
     <div class="container pb-5">
       <div class="row justify-content-center">
         <div class="col-md-6">
-          <form class="row g-3 justify-content-center">
+          <form
+            @submit.prevent="handleSubmit"
+            class="row g-3 justify-content-center"
+          >
             <div class="col-xl-8">
               <label for="inputEmail4" class="form-label">Question</label>
-              <input type="text" class="form-control" id="inputEmail4" />
+              <input
+                v-model="faq.question"
+                type="text"
+                class="form-control"
+                id="inputEmail4"
+              />
             </div>
 
             <div class="col-xl-8">
               <label for="inputPassword4" class="form-label">Answer</label>
-              <input type="text" class="form-control" id="inputPassword4" />
+              <input
+                v-model="faq.answer"
+                type="text"
+                class="form-control"
+                id="inputPassword4"
+              />
             </div>
 
             <div class="col-xl-8">
