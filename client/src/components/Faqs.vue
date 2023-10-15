@@ -1,4 +1,25 @@
-<script setup></script>
+<script setup>
+import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useFaqsStore } from '../stores/faqs';
+
+// store
+const faqsStore = useFaqsStore();
+const { faqs } = storeToRefs(faqsStore);
+
+faqsStore.fetchFaqs();
+
+// actions
+async function handleDelete(id) {
+  if (!confirm('Are you sure to delete this faq?')) return;
+
+  try {
+    await faqsStore.deleteFaq(id);
+  } catch (error) {
+    console.log(error);
+  }
+}
+</script>
 
 <template>
   <section class="faqs px-5 pb-5">
@@ -12,11 +33,18 @@
 
         <div class="col-xl-4">
           <ul class="list-group">
-            <li class="list-group-item">An item</li>
-            <li class="list-group-item">A second item</li>
-            <li class="list-group-item">A third item</li>
-            <li class="list-group-item">A fourth item</li>
-            <li class="list-group-item">And a fifth one</li>
+            <li v-for="faq in faqs" :key="faq._id" class="list-group-item">
+              <p class="lead">
+                {{ faq.question }}
+              </p>
+              <p class="lead d-flex">
+                - {{ faq.answer }}
+                <i
+                  @click="handleDelete(faq._id)"
+                  class="bi bi-x-circle ms-auto"
+                ></i>
+              </p>
+            </li>
           </ul>
         </div>
       </div>
@@ -25,6 +53,10 @@
 </template>
 
 <style scoped>
+.bi-x-circle {
+  cursor: pointer;
+}
+
 .list-group {
   background: transparent !important;
 }

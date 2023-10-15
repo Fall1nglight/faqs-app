@@ -1,8 +1,13 @@
 <script setup>
 import { ref } from 'vue';
-import Joi from 'joi';
+import { storeToRefs } from 'pinia';
+import { useFaqsStore } from '../stores/faqs';
 import axios from 'axios';
 import schemas from '../schemas';
+
+// store
+const faqsStore = useFaqsStore();
+const { faqs } = storeToRefs(faqsStore);
 
 // refs
 const faq = ref({
@@ -10,18 +15,17 @@ const faq = ref({
   answer: '',
 });
 
+function resetFaq() {
+  faq.value.question = '';
+  faq.value.answer = '';
+}
+
 // functions
 const handleSubmit = async () => {
   try {
     await schemas.upload.validateAsync(faq.value);
-
-    const uri = 'http://localhost:3000/api/faqs';
-
-    console.log({ ...faq.value });
-
-    const response = await axios.post(uri, faq.value);
-
-    console.log({ response });
+    await faqsStore.uploadFaq(faq.value);
+    resetFaq();
   } catch (error) {
     console.error(error);
   }
