@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import { useErrStore } from './err';
 import axios from 'axios';
 
 const uri = 'http://localhost:3000/api/faqs';
@@ -21,7 +22,8 @@ export const useFaqsStore = defineStore('faqs', () => {
 
       faqs.value.push(...data.result);
     } catch (error) {
-      return error;
+      const errStore = useErrStore();
+      errStore.setError(error);
     }
   }
 
@@ -33,7 +35,8 @@ export const useFaqsStore = defineStore('faqs', () => {
 
       faqs.value.push(data.result);
     } catch (error) {
-      return error;
+      const errStore = useErrStore();
+      errStore.setError(error);
     }
   }
 
@@ -45,7 +48,8 @@ export const useFaqsStore = defineStore('faqs', () => {
 
       faqs.value = faqs.value.filter((faq) => faq._id !== id);
     } catch (error) {
-      return error;
+      const errStore = useErrStore();
+      errStore.setError(error);
     }
   }
 

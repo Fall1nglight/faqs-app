@@ -1,13 +1,10 @@
 <script setup>
 import { ref } from 'vue';
-import { storeToRefs } from 'pinia';
-import { useFaqsStore } from '../stores/faqs';
-import axios from 'axios';
+import { useErrStore } from '../stores/err';
 import schemas from '../schemas';
 
 // store
-const faqsStore = useFaqsStore();
-const { faqs } = storeToRefs(faqsStore);
+const errStore = useErrStore();
 
 // refs
 const faq = ref({
@@ -27,7 +24,7 @@ const handleSubmit = async () => {
     await faqsStore.uploadFaq(faq.value);
     resetFaq();
   } catch (error) {
-    console.error(error);
+    errStore.setError(error);
   }
 };
 </script>

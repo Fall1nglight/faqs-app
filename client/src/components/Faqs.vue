@@ -2,11 +2,14 @@
 import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useFaqsStore } from '../stores/faqs';
+import { useErrStore } from '../stores/err';
 
 // store
 const faqsStore = useFaqsStore();
+const errStore = useErrStore();
 const { faqs } = storeToRefs(faqsStore);
 
+// do it with suspense
 faqsStore.fetchFaqs();
 
 // actions
@@ -16,7 +19,7 @@ async function handleDelete(id) {
   try {
     await faqsStore.deleteFaq(id);
   } catch (error) {
-    console.log(error);
+    errStore.setError(error);
   }
 }
 </script>
